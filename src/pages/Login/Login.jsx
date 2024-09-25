@@ -11,7 +11,6 @@ export default function Login() {
 
   useEffect(() => {
     const token = localStorage.getItem("token");
-    console.log(token);
     if (token) navigate("/dashboard");
   }, [navigate]);
 
@@ -34,7 +33,6 @@ export default function Login() {
       .then((res) => res.json())
       .then((res) => {
         if (res.token) {
-          debugger;
           localStorage.setItem("token", res.token);
           console.log(res.token);
           navigate("/dashboard");
