@@ -42,7 +42,7 @@ export default function Login() {
       .then((res) => {
         if (res.token) {
           localStorage.setItem("token", res.token);
-          console.log(res.token);
+          // console.log(res.token);
           navigate("/dashboard");
         }
       })

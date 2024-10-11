@@ -22,7 +22,7 @@ export default function Dashboard() {
   const taskRef = useRef();
   const descRef = useRef();
   const taskList = useSelector((state) => {
-    console.log(state);
+    // console.log(state);
     return state.toDos.tasks;
   });
 

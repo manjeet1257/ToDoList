@@ -25,7 +25,7 @@ const toDoReducer = (state = initState, action) => {
 };
 
 function setTodos(state, action) {
-  console.log({ state });
+  // console.log({ state });
   return {
     ...state,
     tasks: action.payload,
@@ -47,7 +47,7 @@ const setToggleTodo = (state, action) => {
 
 const addTodos = (state, action) => {
   const tasks = [...state.tasks, action.payload]; //,state.tasks.push(action.payload);
-  console.log(tasks);
+  // console.log(tasks);
   return {
     ...state,
     tasks,

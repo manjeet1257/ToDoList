@@ -10,15 +10,14 @@ export default function TaskList() {
     <>
       {taskList.map(({ id, title, isCompleted }, index) => {
         return (
-          <Box>
+          <Box key={`div_${id}`}>
             <FormControlLabel
               control={
                 <Checkbox
-                  id={id}
+                  key={`Chk_${id}`}
                   size="small"
                   checked={isCompleted}
                   onChange={() => onToggle(id, isCompleted)}
-                  width="fit-content"
                 />
               }
               label={title}

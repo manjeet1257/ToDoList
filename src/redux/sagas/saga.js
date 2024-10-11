@@ -42,7 +42,7 @@ function* getTodoSaga() {
 function* addTodoSaga(action) {
   try {
     const token = localStorage.getItem("token");
-    console.log(action);
+    // console.log(action);
     const response = yield call(fetch, `${API_URL}/AddTask`, {
       method: "POST",
       headers: {
