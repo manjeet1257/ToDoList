@@ -12,6 +12,18 @@ import { Button } from "@mui/material";
 import FormControlLabel from "@mui/material/FormControlLabel";
 import Checkbox from "@mui/material/Checkbox";
 import TaskList from "../../components/taskList";
+import List from "@mui/material/List";
+import ListItem from "@mui/material/ListItem";
+import ListItemText from "@mui/material/ListItemText";
+import ListItemButton from "@mui/material/ListItemButton";
+import * as React from "react";
+import InputLabel from "@mui/material/InputLabel";
+import MenuItem from "@mui/material/MenuItem";
+import FormControl from "@mui/material/FormControl";
+import Select from "@mui/material/Select";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
 export const TodoContext = createContext({});
 
@@ -126,7 +138,7 @@ export default function Dashboard() {
           sx={{ margin: "auto" }}
           width="300px"
         >
-          <TextField
+          {/* <TextField
             size="small"
             fullWidth
             id="task"
@@ -138,8 +150,29 @@ export default function Dashboard() {
             id="description"
             label="Description"
             variant="outlined"
+            multiline
+            rows={4}
             size="small"
-          />
+          /> */}
+          <input type="text" ref={taskRef}></input>
+          <input type="text" ref={descRef}></input>
+          {/* <FormControl fullWidth>
+            <InputLabel id="selectList-label">List</InputLabel>
+            <Select
+              size="small"
+              labelId="selectList-label"
+              id="selectList"
+              label="List"
+              defaultValue="10"
+            >
+              <MenuItem value={10}>Ten</MenuItem>
+              <MenuItem value={20}>Twenty</MenuItem>
+              <MenuItem value={30}>Thirty</MenuItem>
+            </Select>
+          </FormControl>
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker label="Basic date picker" />
+          </LocalizationProvider> */}
           <Box
             sx={{ display: "flex", flexDirection: "row", marginBottom: "10px" }}
           >
@@ -148,7 +181,7 @@ export default function Dashboard() {
               fullWidth
               onClick={handleSubmitTask}
               size="small"
-              sx={{ width: "250px", marginRight: "10px" }}
+              sx={{ marginRight: "10px" }}
             >
               Save Changes
             </Button>
