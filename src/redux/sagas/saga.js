@@ -1,12 +1,13 @@
 // sagas.js
 import { call, put, takeEvery, all } from "redux-saga/effects";
 import {
-  GET_TODO_REQUEST,
   SET_TODO,
   ADD_TODO,
   TOGGLE_TODO,
   REMOVE_TODO,
   TOGGLE_TODO_REQUEST,
+  ADD_TODO_REQUEST,
+  GET_TODO_REQUEST,
 } from "../actions/todoActionTypes";
 
 const API_URL = "http://localhost:5000/api/Task"; // Replace with your actual API endpoint
@@ -40,15 +41,21 @@ function* getTodoSaga() {
 
 function* addTodoSaga(action) {
   try {
-    const response = yield call(fetch, API_URL, {
+    const token = localStorage.getItem("token");
+    console.log(action);
+    const response = yield call(fetch, `${API_URL}/AddTask`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
       },
-      body: JSON.stringify({ text: action.payload.text }),
+      body: JSON.stringify({
+        Title: action.payload.task,
+        Description: action.payload.desc,
+      }),
     });
     const todo = yield response.json();
-    yield put({ type: ADD_TODO, payload: { ...todo, completed: false } });
+    yield put({ type: ADD_TODO, payload: todo });
   } catch (error) {
     console.error("Error adding todo:", error);
   }
@@ -100,7 +107,7 @@ function* removeTodoSaga(action) {
 }
 
 function* watchAddTodo() {
-  yield takeEvery("ADD_TODO_REQUEST", addTodoSaga);
+  yield takeEvery(ADD_TODO_REQUEST, addTodoSaga);
 }
 
 function* watchToggleTodo() {

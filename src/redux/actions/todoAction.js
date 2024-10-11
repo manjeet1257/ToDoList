@@ -1,10 +1,11 @@
 // actions.js
 import {
-  GET_TODO_REQUEST,
   ADD_TODO,
   TOGGLE_TODO,
   REMOVE_TODO,
+  GET_TODO_REQUEST,
   TOGGLE_TODO_REQUEST,
+  ADD_TODO_REQUEST,
 } from "./todoActionTypes";
 
 export const getTodo = () => {
@@ -14,9 +15,9 @@ export const getTodo = () => {
   };
 };
 
-export const addTodo = (text) => ({
-  type: ADD_TODO,
-  payload: { text },
+export const addTodo = (task, desc) => ({
+  type: ADD_TODO_REQUEST,
+  payload: { task, desc },
 });
 
 export const toggleTodo = (id, isCompleted) => {

@@ -5,8 +5,9 @@ import { Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
 export default function Login() {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  // const [username, setUsername] = useState("");
+  // const [password, setPassword] = useState("");
+  const [form, setForm] = useState({ username: "", password: "" });
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -14,18 +15,25 @@ export default function Login() {
     if (token) navigate("/dashboard");
   }, [navigate]);
 
-  const handleUsernameChange = (event) => {
-    setUsername(event.target.value);
-  };
+  // const handleUsernameChange = (event) => {
+  //   setUsername(event.target.value);
+  // };
 
-  const handlePasswordChange = (event) => {
-    setPassword(event.target.value);
+  // const handlePasswordChange = (event) => {
+  //   setPassword(event.target.value);
+  // };
+
+  const handleChange = (event) => {
+    setForm({
+      ...form,
+      [event.target.name]: event.target.value,
+    });
   };
 
   const handleSubmit = () => {
     fetch("http://localhost:5000/api/auth", {
       method: "POST",
-      body: JSON.stringify({ username, password }),
+      body: JSON.stringify(form),
       headers: {
         "Content-Type": "application/json",
       },
@@ -60,8 +68,9 @@ export default function Login() {
           id="username"
           label="Username"
           variant="outlined"
-          value={username}
-          onChange={handleUsernameChange}
+          value={form.username}
+          name="username"
+          onChange={handleChange}
         />
         <TextField
           fullWidth
@@ -69,7 +78,9 @@ export default function Login() {
           label="Password"
           variant="outlined"
           type="password"
-          onChange={handlePasswordChange}
+          value={form.password}
+          name="password"
+          onChange={handleChange}
         />
 
         <Button variant="contained" fullWidth onClick={handleSubmit}>
