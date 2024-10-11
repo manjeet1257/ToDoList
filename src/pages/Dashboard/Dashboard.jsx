@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getTodo } from "../../redux/actions/todoAction";
+import { getTodo, toggleTodo } from "../../redux/actions/todoAction";
 
 export default function Dashboard() {
   const [type, setType] = useState("today");
@@ -18,53 +18,54 @@ export default function Dashboard() {
   });
 
   useEffect(() => {
-    console.log("useeffect");
+    // console.log("useeffect");
     const token = localStorage.getItem("token");
     if (!token) navigate("/login");
     dispatch(getTodo());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch]);
 
-  const handleCompleteTodo = (id) => {
-    const token = localStorage.getItem("token");
-    let isCompleted;
-    const tasks = taskList.map((task) => {
-      if (id === task.id) {
-        task.isCompleted = !task.isCompleted;
-        isCompleted = task.isCompleted;
-      }
-      return task;
-    });
+  const handleCompleteTodo = (id, isCompleted) => {
+    dispatch(toggleTodo(id, !isCompleted));
 
-    fetch(`http://localhost:5000/api/Task/UpdateTask/${id}`, {
-      method: "patch",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify([
-        {
-          op: "replace",
-          path: "/isCompleted",
-          value: isCompleted,
-        },
-      ]),
-    })
-      .then((res) => {
-        if (!res.ok && res.status === 401) {
-          localStorage.removeItem("token");
-          console.error("Unauthorized access. Please log in again.");
-          navigate("/login");
-        }
-        return res.json();
-      })
-      .then(() => {
-        // setTaskList([...tasks]);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
+    // const token = localStorage.getItem("token");
+    // let isCompleted;
+    // const tasks = taskList.map((task) => {
+    //   if (id === task.id) {
+    //     task.isCompleted = !task.isCompleted;
+    //     isCompleted = task.isCompleted;
+    //   }
+    //   return task;
+    // });
+    // fetch(`http://localhost:5000/api/Task/UpdateTask/${id}`, {
+    //   method: "patch",
+    //   headers: {
+    //     Accept: "application/json",
+    //     "Content-Type": "application/json",
+    //     Authorization: `Bearer ${token}`,
+    //   },
+    //   body: JSON.stringify([
+    //     {
+    //       op: "replace",
+    //       path: "/isCompleted",
+    //       value: isCompleted,
+    //     },
+    //   ]),
+    // })
+    //   .then((res) => {
+    //     if (!res.ok && res.status === 401) {
+    //       localStorage.removeItem("token");
+    //       console.error("Unauthorized access. Please log in again.");
+    //       navigate("/login");
+    //     }
+    //     return res.json();
+    //   })
+    //   .then(() => {
+    //     // setTaskList([...tasks]);
+    //   })
+    //   .catch((err) => {
+    //     console.error(err);
+    //   });
   };
 
   return (
