@@ -3,11 +3,14 @@ import { call, put, takeEvery, all } from "redux-saga/effects";
 import {
   SET_TODO,
   ADD_TODO,
+  EDIT_TODO,
   TOGGLE_TODO,
   REMOVE_TODO,
   TOGGLE_TODO_REQUEST,
   ADD_TODO_REQUEST,
+  EDIT_TODO_REQUEST,
   GET_TODO_REQUEST,
+  REMOVE_TODO_REQUEST,
 } from "../actions/todoActionTypes";
 
 const API_URL = "http://localhost:5000/api/Task"; // Replace with your actual API endpoint
@@ -32,6 +35,7 @@ function* getTodoSaga() {
     }
 
     const todo = yield response.json();
+    console.log(todo);
     //type is basically a action type
     yield put({ type: SET_TODO, payload: todo });
   } catch (error) {
@@ -52,12 +56,38 @@ function* addTodoSaga(action) {
       body: JSON.stringify({
         Title: action.payload.task,
         Description: action.payload.desc,
+        DueDate: action.payload.duedate,
       }),
     });
     const todo = yield response.json();
     yield put({ type: ADD_TODO, payload: todo });
   } catch (error) {
     console.error("Error adding todo:", error);
+  }
+}
+
+function* editTodoSaga(action) {
+  try {
+    const token = localStorage.getItem("token");
+    // console.log(action);
+    const response = yield call(fetch, `${API_URL}/UpdateTask`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        Id: action.payload.id,
+        Title: action.payload.task,
+        Description: action.payload.desc,
+        DueDate: action.payload.duedate,
+        isCompleted: action.payload.isCompleted,
+      }),
+    });
+    const todo = yield response.json();
+    yield put({ type: EDIT_TODO, payload: todo });
+  } catch (error) {
+    console.error("Error updating todo:", error);
   }
 }
 
@@ -95,19 +125,32 @@ function* toggleTodoSaga(action) {
 
 function* removeTodoSaga(action) {
   try {
-    const response = yield call(fetch, `${API_URL}/${action.payload.id}`, {
-      method: "DELETE",
-    });
-    if (response.ok) {
-      yield put({ type: REMOVE_TODO, payload: { id: action.payload.id } });
-    }
+    const token = localStorage.getItem("token");
+    // console.log(action);
+    const response = yield call(
+      fetch,
+      `${API_URL}/DeleteTask/${action.payload.id}`,
+      {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+    const todo = yield response.json();
+    yield put({ type: REMOVE_TODO, payload: todo });
   } catch (error) {
-    console.error("Error removing todo:", error);
+    console.error("Error updating todo:", error);
   }
 }
 
 function* watchAddTodo() {
   yield takeEvery(ADD_TODO_REQUEST, addTodoSaga);
+}
+
+function* watchEditTodo() {
+  yield takeEvery(EDIT_TODO_REQUEST, editTodoSaga);
 }
 
 function* watchToggleTodo() {
@@ -116,7 +159,7 @@ function* watchToggleTodo() {
 }
 
 function* watchRemoveTodo() {
-  yield takeEvery("REMOVE_TODO_REQUEST", removeTodoSaga);
+  yield takeEvery(REMOVE_TODO_REQUEST, removeTodoSaga);
 }
 
 function* watchGetTodo() {
@@ -127,6 +170,7 @@ export default function* rootSaga() {
   yield all([
     watchGetTodo(),
     watchAddTodo(),
+    watchEditTodo(),
     watchToggleTodo(),
     watchRemoveTodo(),
   ]);

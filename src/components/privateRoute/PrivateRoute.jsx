@@ -7,13 +7,13 @@ const PrivateRoute = ({ children, isAuthenticated }) => {
   const token = localStorage.getItem("token");
   if (!token) return <Navigate to="/login" />;
   let decodedToken = jwtDecode(token);
-  console.log("Decoded Token", decodedToken);
+  // console.log("Decoded Token", decodedToken);
   let currentDate = new Date();
 
   // JWT exp is in seconds
-  console.log(decodedToken.exp);
+  // console.log(decodedToken.exp);
   if (decodedToken.exp * 1000 < currentDate.getTime()) {
-    console.log("Token expired.");
+    // console.log("Token expired.");
     localStorage.removeItem("token");
     return <Navigate to="/login" />;
   }
